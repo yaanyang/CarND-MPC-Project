@@ -93,8 +93,8 @@ int main() {
           double v = j[1]["speed"];
 
           // Transform from map's coordinates to car's coordinates
-          vector<double> ptsx_c;
-          vector<double> ptsy_c;
+          Eigen::VectorXd ptsx_c (ptsx.size());
+          Eigen::VectorXd ptsy_c (ptsx.size());
           // +90 degree from map's coordinates to car's coordinates
           double theta = pi() / 2;
           // x, y set to 0.0 while tranforming to car's coordinates
@@ -109,8 +109,8 @@ int main() {
               new_x = px + cos(theta) * ptsx[i] - sin(theta) * ptsy[i];
               new_y = py + sin(theta) * ptsx[i] + cos(theta) * ptsy[i];
 
-              ptsx_c.push_back(new_x);
-              ptsy_c.push_back(new_y);
+              ptsx_c[i] = new_x;
+              ptsy_c[i] = new_y;
           }
 
           double psi_c = psi + theta;   
