@@ -95,8 +95,7 @@ int main() {
           // Transform from map's coordinates to car's coordinates
           Eigen::VectorXd ptsx_c(ptsx.size());
           Eigen::VectorXd ptsy_c(ptsx.size());
-          // +90 degree from map's coordinates to car's coordinates
-          double theta = pi() / 2;
+          
           // x, y, psi set to 0.0 while tranforming to car's coordinates
           double px_c = 0.0;
           double py_c = 0.0;
