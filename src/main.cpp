@@ -93,27 +93,23 @@ int main() {
           double v = j[1]["speed"];
 
           // Transform from map's coordinates to car's coordinates
-          Eigen::VectorXd ptsx_c (ptsx.size());
-          Eigen::VectorXd ptsy_c (ptsx.size());
+          Eigen::VectorXd ptsx_c(ptsx.size());
+          Eigen::VectorXd ptsy_c(ptsx.size());
           // +90 degree from map's coordinates to car's coordinates
           double theta = pi() / 2;
-          // x, y set to 0.0 while tranforming to car's coordinates
+          // x, y, psi set to 0.0 while tranforming to car's coordinates
           double px_c = 0.0;
           double py_c = 0.0;
+          double psi_c = 0.0;   
           
-          for (unsigned i = 0; i < ptsx.size(); ++i) {
-              // Hold x, y in car's coordinates
-              double new_x, new_y;
+          for (unsigned i = 0; i < ptsx.size(); ++i) {              
+              double dx = ptsx[i] - px;
+              double dy = ptsy[i] - py;
 
-              // Homogeneous transformation
-              new_x = px + cos(theta) * ptsx[i] - sin(theta) * ptsy[i];
-              new_y = py + sin(theta) * ptsx[i] + cos(theta) * ptsy[i];
-
-              ptsx_c[i] = new_x;
-              ptsy_c[i] = new_y;
-          }
-
-          double psi_c = psi + theta;   
+              // Transformation
+              ptsx_c[i] = cos(psi) * dx + sin(psi) * dy;
+              ptsy_c[i] = - sin(psi) * dx + cos(psi) * dy;
+          }          
           
           // Fit a 3rd degree polynomial to the above x and y coordinates
           auto coeffs = polyfit(ptsx_c, ptsy_c, 3);
@@ -150,6 +146,12 @@ int main() {
           //Display the MPC predicted trajectory 
           vector<double> mpc_x_vals;
           vector<double> mpc_y_vals;
+
+          int n_vals = (vars.size() - 2) / 2;
+          for (unsigned i = 0; i < n_vals; ++i) {
+              mpc_x_vals.push_back(vars[2 + 2 * i]);
+              mpc_y_vals.push_back(vars[2 + 2 * i + 1]);
+          }
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
