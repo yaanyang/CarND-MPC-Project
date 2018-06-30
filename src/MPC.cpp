@@ -21,8 +21,8 @@ double dt = 0.05;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
-// The reference velocity is set to 40 mph.
-double ref_v = 60;
+// The reference velocity is set to 70 mph.
+double ref_v = 70;
 
 // Establish when one variable starts and another ends to make our lifes easier.
 size_t x_start = 0;

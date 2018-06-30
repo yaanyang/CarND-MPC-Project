@@ -91,6 +91,8 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          double steer_value = j[1]["steering_angle"];
+          double throttle_value = j[1]["throttle"];
 
           // Transform from map's coordinates to car's coordinates
           Eigen::VectorXd ptsx_c(ptsx.size());
@@ -118,6 +120,16 @@ int main() {
           // Calculate the orientation error
           double epsi = psi_c - atan(coeffs[1]);
 
+          // Predict state after 100 milisecond latency
+          double dt_lat = 0.1;
+          const double Lf = 2.67;
+          px_c += v * cos(psi_c) * dt_lat;
+          py_c += v * sin(psi_c) * dt_lat;
+          psi_c += (v / Lf) * (- steer_value) * dt_lat;
+          v += throttle_value * dt_lat;
+          cte += v * sin(epsi) * dt_lat;
+          epsi += (v / Lf) * (- steer_value) * dt_lat;
+
           // Store into state vector
           Eigen::VectorXd state(6);
           state << px_c, py_c, psi_c, v, cte, epsi;
@@ -128,8 +140,7 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
-          double steer_value;
-          double throttle_value;
+          
 
           auto vars = mpc.Solve(state, coeffs);          
 
@@ -185,7 +196,7 @@ int main() {
           //
           // NOTE: REMEMBER TO SET THIS TO 100 MILLISECONDS BEFORE
           // SUBMITTING.
-          //this_thread::sleep_for(chrono::milliseconds(100));
+          this_thread::sleep_for(chrono::milliseconds(100));
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
