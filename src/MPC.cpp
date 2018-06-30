@@ -61,7 +61,7 @@ class FG_eval {
     // Minimize change rate
     for (unsigned int t = 0; t < N - 1; ++t) {
         fg[0] += CppAD::pow(vars[delta_start + t], 2);
-        fg[0] += CppAD::pow(vars[a_start + t], 2);        
+        fg[0] += 100 * CppAD::pow(vars[a_start + t], 2);        
     }
 
     // Minimize change between sequential acuations
