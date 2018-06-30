@@ -22,7 +22,7 @@ double dt = 0.05;
 const double Lf = 2.67;
 
 // The reference velocity is set to 70 mph.
-double ref_v = 70;
+double ref_v = 50;
 
 // Establish when one variable starts and another ends to make our lifes easier.
 size_t x_start = 0;
